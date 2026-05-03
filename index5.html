@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, shrink-to-fit=no">
+  <title>Pengumuman Kelulusan • SMAN 1 Pangkalan Lesung</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f5f7fa 0%, #e9edf5 100%);
+      font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1.2rem 1rem 2.5rem;
+      color: #1e293b;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Canvas untuk kembang api */
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 580px;
+      width: 100%;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: #ffffff;
+      border-radius: 2.5rem;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.08), 0 10px 20px rgba(0,20,50,0.06);
+      padding: 2rem 1.5rem 2.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(255,255,255,0.6);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Logo - Dua logo bersebelahan */
+    .logo-section {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .logo-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .logo-image {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 12px 22px rgba(2, 48, 71, 0.25);
+      border: 3px solid #facc15;
+      transition: transform 0.3s;
+      background: #eaf0f6;
+      display: block;
+    }
+
+    .logo-image:hover {
+      transform: scale(1.05);
+    }
+
+    /* Nama Sekolah */
+    .school-name {
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      color: #0b3b5c;
+      margin: 0.5rem 0 0.3rem;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+    }
+
+    .sub-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #2c4b6b;
+      background: #e6f0f9;
+      display: inline-block;
+      padding: 0.25rem 1.2rem;
+      border-radius: 30px;
+      margin-bottom: 1.3rem;
+      letter-spacing: 0.4px;
+    }
+
+    /* Foto Guru */
+    .teachers-photo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0.6rem 0 1.2rem;
+      width: 100%;
+      gap: 0.5rem;
+    }
+
+    .single-teacher-photo {
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 16 / 9;
+      border-radius: 1.5rem;
+      object-fit: cover;
+      box-shadow: 0 14px 24px rgba(0,0,0,0.2);
+      border: 4px solid white;
+      background: #d9e5f2;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: transform 0.3s ease;
+      display: block;
+    }
+
+    .single-teacher-photo:hover {
+      transform: scale(1.01);
+    }
+
+    /* Garis pembatas */
+    .divider {
+      width: 80%;
+      height: 3px;
+      background: linear-gradient(to right, transparent, #9bb7d4, #2c5282, #9bb7d4, transparent);
+      border-radius: 5px;
+      margin: 0.8rem 0 1.8rem;
+    }
+
+    /* Judul Pengumuman */
+    .announcement-title {
+      text-align: center;
+      margin-bottom: 1rem;
+      padding: 0.6rem 0.8rem;
+      background: linear-gradient(135deg, #0b3b5c, #1a5276);
+      color: white;
+      border-radius: 1.2rem;
+      width: 100%;
+      box-shadow: 0 6px 14px rgba(2, 48, 71, 0.2);
+    }
+
+    .announcement-title h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .announcement-title .subtitle {
+      font-size: 0.8rem;
+      font-weight: 400;
+      opacity: 0.9;
+      margin-top: 0.15rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Kotak pencarian */
+    .search-box {
+      width: 100%;
+      background: #f8fafd;
+      border-radius: 3rem;
+      padding: 0.4rem 0.4rem 0.4rem 1.4rem;
+      display: flex;
+      align-items: center;
+      border: 1.5px solid #cfdfef;
+      background: white;
+      box-shadow: 0 6px 16px rgba(0,32,64,0.07);
+      margin-bottom: 1.4rem;
+      transition: border 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: #1e4a76;
+      box-shadow: 0 0 0 4px rgba(30,74,118,0.15);
+    }
+
+    .search-box input {
+      flex: 1;
+      border: none;
+      padding: 0.8rem 0.4rem;
+      font-size: 1rem;
+      background: transparent;
+      outline: none;
+      color: #0c2d44;
+      font-weight: 500;
+    }
+
+    .search-box input::placeholder {
+      color: #8aa1b9;
+      font-weight: 400;
+      font-size: 0.95rem;
+    }
+
+    .search-box button {
+      background: #0c3f5e;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.7rem 1.6rem;
+      border-radius: 2.5rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.4px;
+      background: linear-gradient(135deg, #1a4b6e, #072c41);
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 6px 12px rgba(2,48,71,0.3);
+      border: 1px solid #facc1550;
+    }
+
+    .search-box button:hover {
+      background: linear-gradient(135deg, #1f5880, #0a3852);
+      box-shadow: 0 8px 16px rgba(2,48,71,0.4);
+    }
+
+    .result-area {
+      width: 100%;
+      min-height: 95px;
+      margin: 0.5rem 0 1.2rem;
+      background: #f4f9ff;
+      border-radius: 1.8rem;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      border: 1px dashed #97b9da;
+      background: #f0f6fe;
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .student-name {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #003153;
+      margin-bottom: 0.5rem;
+      word-break: break-word;
+      animation: popIn 0.5s ease-out;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+      70% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .graduation-message {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #0f5c3b;
+      background: #e3f5e9;
+      padding: 0.4rem 1.4rem;
+      border-radius: 2rem;
+      display: inline-block;
+      letter-spacing: 0.3px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .graduation-message.show {
+      opacity: 1;
+    }
+
+    .word-by-word {
+      display: inline-block;
+      margin-right: 4px;
+      animation: wordPop 0.3s ease-out;
+    }
+
+    @keyframes wordPop {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .error-message {
+      color: #b22234;
+      font-weight: 500;
+      background: #ffe6e8;
+      padding: 0.4rem 1.2rem;
+      border-radius: 20px;
+    }
+
+    /* Foto SK */
+    .sk-card {
+      width: 100%;
+      margin-top: 0.8rem;
+      background: #ffffff;
+      border-radius: 1.8rem;
+      overflow: hidden;
+      box-shadow: 0 14px 24px rgba(0,0,0,0.12);
+      border: 1px solid #cdddec;
+    }
+
+    .sk-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      background: #eef3f9;
+      aspect-ratio: 16 / 11;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" fill="%23dee7f2"><rect width="400" height="280" fill="%23eaf0f6"/><text x="200" y="150" font-size="20" font-weight="bold" text-anchor="middle" fill="%2332567b">SK KELULUSAN</text><text x="200" y="180" font-size="14" text-anchor="middle" fill="%23405c7a">SMAN 1 Pangkalan Lesung</text></svg>');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .sk-caption {
+      padding: 0.7rem 1rem;
+      font-size: 0.9rem;
+      color: #2c4858;
+      background: #fafcff;
+      text-align: center;
+      font-weight: 500;
+      border-top: 1px solid #dce5f0;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1.5rem 1.2rem 1.8rem;
+      }
+      .school-name {
+        font-size: 1.7rem;
+      }
+      .single-teacher-photo {
+        max-width: 100%;
+        aspect-ratio: 4 / 3;
+      }
+      .logo-image {
+        width: 70px;
+        height: 70px;
+      }
+      .logo-section {
+        gap: 0.8rem;
+      }
+      .announcement-title h2 {
+        font-size: 1.05rem;
+      }
+      .announcement-title .subtitle {
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas untuk kembang api -->
+  <canvas id="fireworksCanvas"></canvas>
+
+  <div class="container">
+    <!-- 1. Dua Logo bersebelahan -->
+    <div class="logo-section">
+      <!-- Logo 1 (Kiri) -->
+      <div class="logo-item">
+        <img 
+          id="logoImage1" 
+          src="f8e6ecfffeec0006740517c52a6c6424-removebg-preview.png"
+          alt="Logo 1"
+          class="logo-image"
+        >
+      </div>
+
+      <!-- Logo 2 (Kanan) -->
+      <div class="logo-item">
+        <img 
+          id="logoImage2" 
+          src="Logo_SMAN_1_PKL_Lesung_HD_ (1).png"
+          alt="Logo 2"
+          class="logo-image"
+        >
+      </div>
+    </div>
+
+    <!-- 2. Nama Sekolah -->
+    <div class="school-name">SMAN 1</div>
+    <div class="sub-name">Pangkalan Lesung</div>
+
+    <!-- 3. Foto Para Guru -->
+    <div class="teachers-photo">
+      <img 
+        id="teacherPhoto" 
+        src="KAM02367.JPG"
+        alt="Foto Para Guru SMAN 1 Pangkalan Lesung"
+        class="single-teacher-photo"
+      >
+    </div>
+
+    <!-- 4. Pembatas garis -->
+    <div class="divider"></div>
+
+    <!-- JUDUL PENGUMUMAN -->
+    <div class="announcement-title">
+      <h2>📢 Pengumuman Kelulusan 2026</h2>
+      <div class="subtitle">SMAN 1 Pangkalan Lesung • Provinsi Riau</div>
+    </div>
+
+    <!-- 5. Kotak Pencarian NISN -->
+    <div class="search-box">
+      <input type="text" id="nisnInput" placeholder="Masukkan NISN (contoh: 0084567556)" inputmode="numeric" autocomplete="off">
+      <button id="searchBtn">🔍 Cari</button>
+    </div>
+
+    <!-- Area hasil pencarian -->
+    <div class="result-area" id="resultArea">
+      <span style="color:#5b6f87; font-size:0.9rem;">✨ Ketik NISN lalu tekan cari</span>
+    </div>
+
+    <!-- 6. Foto SK Kelulusan -->
+    <div class="sk-card">
+      <div class="sk-image" aria-label="Scan SK Kelulusan"></div>
+      <div class="sk-caption">📄 Surat Keputusan Kelulusan · 2026</div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ========== DATA SISWA ==========
+      const studentData = {
+        "0084567556": "Aditya Dwika Prasetya",
+        "0065781092": "Aef Saefuloh",
+        "0048846092": "Albet Nurdiansyah",
+        "0071565066": "Aqista Kisti Amilia",
+        "0081968255": "Bintang Rezeki Sulaiman",
+        "0074231761": "Bryan Liuzzy Wardana Putra",
+        "0067978434": "Dede Andrean",
+        "0069226211": "Harry Potter G Manalu",
+        "0076886278": "Jery Andareas Manik",
+        "0066419576": "Jordan Irawan",
+        "0071740027": "Juliandri Ardiyansyah",
+        "0081230770": "Maya Apriliani",
+        "0079905079": "Melinda Cahya Ningrum",
+        "0081188411": "Muhammad Naufal",
+        "0089546160": "Muhammad Restu Nusantara",
+        "0071749454": "Muhammad Ulil Albab",
+        "0077912852": "Nabila Afza",
+        "0074458615": "Novita Wahyuningsih",
+        "0062826661": "Priskila Christine Zalukhu",
+        "0072118191": "Rahmat Efandi Praza",
+        "0073942074": "Rewino Yurianda",
+        "0088304156": "Siska Wulandari",
+        "0074395256": "Siti Nurzahra",
+        "0084640744": "Vania Khaila Putri",
+        "0075000121": "Widiya Safira Putri",
+        "0069576303": "Yessi Adinda Amelia",
+        "0061795148": "Yoga",
+        "0072751383": "Yolanda Ayu Ningsih",
+        "0084139522": "Zahra Rizky Nugraeni",
+        "0089576378": "Zaky Alfiansyah",
+        "0089576378": "Zikco Verdinal",
+        "0065681560": "Afrizal Saputra",
+        "0074844039": "Riyadatul Arsyi Ramadhani",
+        "0089798161": "Ainur Khasanah",
+        "0084815477": "Aldho Dwi Pratama",
+        "0087083723": "Alendra Pratama",
+        "0067878008": "Angga Wahyuda Pratama",
+        "0062784869": "Bafaqih Tafrikhul Wildan",
+        "0087061684": "Bunga Lestari Lumban Gaol",
+        "0086274900": "Carlos Gutere Parhusip",
+        "0083350228": "Fahri Hanafi Afrin",
+        "0086391610": "Gadis Naominta Simarmata",
+        "10079682162": "Galih Jati Kesuma",
+        "0074518541": "Ghali Putra Utama",
+        "0085709916": "Gita Gutawa",
+        "0082966036": "Kevin Panji Setiawan",
+        "0089036940": "Lilis Lorenza Alfiance Zega",
+        "0073091596": "Mei Ratu Lina",
+        "0084848292": "Menci Ani",
+        "0076060242": "Muhammad Kafa",
+        "0075420956": "Nabila Mahesa Taji Putri",
+        "0079135486": "Rahadatul Aisya",
+        "0071643442": "Raihan Alfareza",
+        "0078029653": "Ramadya Alma",
+        "0075318043": "Reza Gustiandi",
+        "0075704054": "Risti Kartika Saragi",
+        "0076513854": "Suci",
+        "0086088009": "T.B Reva Zahra Putri",
+        "0075801283": "Thalita Glesia Br Berutu",
+        "0081588190": "Wulan Febriani ",
+        "0082579569": "Wendi Jun Alfiqryh",
+        "0071253592": "Wiwid Nur Rahma",
+        "0087882495": "Yessa Aprilla",
+        "0075050177": "Yulianus Laia",
+        "0086819645": "Clarysta Avisa",
+        "0078289692": "Abdulrohman",
+        "0089002485": "Anggi Pratiwi Wardani",
+        "0087430843": "Arifa Afni",
+        "0084581448": "Aulia Syahhira Dewi",
+        "0079295317": "Ayu Windari",
+        "0084253486": "Dania Nidaur Rahmah",
+        "0082846157": "Devita Anggraeni",
+        "0075157449": "Dwina Melitzsa Putri Pane",
+        "0089251106": "Evan Maychael M",
+        "0071732636": "Fitri Susanti",
+        "0065455525": "Fornita Daeli",
+        "0073195381": "Hafidz Alfa Ramadhan",
+        "0082667676": "Indah Nuraini",
+        "0074383208": "Leny Marcelina Siregar",
+        "0087835351": "Marafa Fakhri Ahmad",
+        "0075084413": "Meta Listiani",
+        "0079498913": "Nanang Setiawan",
+        "0078613389": "Nashwa Tia Agustin",
+        "0072616813": "Novita Sari",
+        "0074207780": "Prayoga",
+        "0076836183": "Rahma Aulia Yoanri",
+        "0071905747": "Roma Intan",
+        "0071450069": "Ruben Manulang",
+        "0084283371": "Santa Melinda Manullang",
+        "0073145016": "Sherly Monalisa",
+        "0071644361": "Ulil Arham",
+        "0089500771": "Vicry Ilham Pratama",
+        "0088311404": "Widy Amelya Maylanie",
+        "0082324481": "Yetri Indah Sari",
+        "0082020473": "Abdul Aziz Manurung",
+        "0085181504": "Adelya Indah Shakira",
+        "0075269767": "Anggun Nurul Imanda",
+        "0076718414": "Ardela Ramadhani",
+        "0082692617": "Belqis Dwi Zahara",
+        "0079846101": "Christian Bethnes Evan",
+        "0065909358": "Dania Suwantika",
+        "0076049299": "Fachrisyad Alfiansyah",
+        "0072739243": "Fanisa Ismah Salsabila",
+        "0086117927": "Fatih Afdelino Fikri",
+        "0073829950": "Fika Ainal Firda",
+        "0084227830": "Firman Leonardo Naibaho",
+        "0083189355": "Giva Caradine",
+        "0087714861": "Jesika Permata Br Sembiring",
+        "0077010371": "Khairun Nisa Ramadhani",
+        "0075110278": "Laura Natalia",
+        "0086178153": "Lismawati",
+        "0071825843": "Mifdhatul Diva Sakhinah",
+        "0074763796": "Muhammad Akbar",
+        "0071344091": "Muhammad Julianto",
+        "0062076283": "Muhammad Rido",
+        "0079777019": "Muhammad Sholeh",
+        "0086378931": "Nabil Tri Guntarto",
+        "0076317799": "Nataly Mutiara Tamba",
+        "0066759069": "Niken Desri Anglina Putri",
+        "0085413013": "Ningrum Sulistia",
+        "0076414303": "Rachel Noor Zahratusytha",
+        "0088106657": "Raditya Herna Pamitra",
+        "0085760814": "Raja Fazlie Himawan Malaika",
+        "0072924176": "Satria Julianto",
+        "0073919265": "Suci Ramadhani",
+        "0086096851": "Tiur Cristofer Zebua",
+        "0089444688": "Widya Nursafira",
+        "0083274732": "Yohana Putri Simbolon",
+        "0083143074": "Ziw First Lady Chantika Gysell Sinatra Sitorus"
+      };
+
+      // ========== ELEMEN DOM ==========
+      const nisnInput = document.getElementById('nisnInput');
+      const searchBtn = document.getElementById('searchBtn');
+      const resultArea = document.getElementById('resultArea');
+
+      // ========== KEMBANG API (FIREWORKS) ==========
+      const canvas = document.getElementById('fireworksCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      let particles = [];
+      let animationId = null;
+      let isFireworksRunning = false;
+
+      // Resize canvas
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      // Warna-warni kembang api
+      const colors = [
+        '#FF6B6B', '#FFE66D', '#4ECDC4', '#45B7D1', '#96CEB4',
+        '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE',
+        '#FF1493', '#00CED1', '#FFD700', '#FF4500', '#7FFF00',
+        '#FF69B4', '#00BFFF', '#FFA500', '#32CD32', '#FF6347'
+      ];
+
+      // Kelas Particle
+      class Particle {
+        constructor(x, y) {
+          this.x = x;
+          this.y = y;
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.velocity = {
+            x: (Math.random() - 0.5) * 6,
+            y: (Math.random() - 0.5) * 6
+          };
+          this.alpha = 1;
+          this.decay = Math.random() * 0.02 + 0.015;
+          this.size = Math.random() * 4 + 2;
+          this.gravity = 0.05;
+        }
+
+        update() {
+          this.velocity.y += this.gravity;
+          this.x += this.velocity.x;
+          this.y += this.velocity.y;
+          this.alpha -= this.decay;
+        }
+
+        draw(ctx) {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = this.color;
+          ctx.shadowColor = this.color;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function createExplosion(x, y, particleCount) {
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle(x, y));
+        }
+      }
+
+      function launchFirework() {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * (canvas.height * 0.6) + (canvas.height * 0.1);
+        const particleCount = Math.floor(Math.random() * 80) + 40;
+        createExplosion(x, y, particleCount);
+      }
+
+      function launchMultipleFireworks(count) {
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            if (isFireworksRunning) {
+              launchFirework();
+            }
+          }, i * 200);
+        }
+      }
+
+      function animate() {
+        if (!isFireworksRunning) return;
+        
+        animationId = requestAnimationFrame(animate);
+        
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        particles = particles.filter(p => p.alpha > 0);
+        particles.forEach(p => {
+          p.update();
+          p.draw(ctx);
+        });
+        
+        if (particles.length === 0 && !isFireworksRunning) {
+          stopFireworks();
+        }
+      }
+
+      function startFireworks() {
+        stopFireworks();
+        particles = [];
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        isFireworksRunning = true;
+        
+        launchMultipleFireworks(10);
+        
+        setTimeout(() => {
+          if (isFireworksRunning) launchMultipleFireworks(8);
+        }, 1500);
+        
+        setTimeout(() => {
+          if (isFireworksRunning) launchMultipleFireworks(6);
+        }, 3000);
+        
+        animate();
+        
+        setTimeout(() => {
+          stopFireworks();
+        }, 6000);
+      }
+
+      function stopFireworks() {
+        isFireworksRunning = false;
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+        setTimeout(() => {
+          if (!isFireworksRunning) {
+            particles = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          }
+        }, 500);
+      }
+
+      // ========== FUNGSI PENCARIAN NISN ==========
+      function displayGraduationMessage(studentName) {
+        stopFireworks();
+        
+        resultArea.innerHTML = '';
+        
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'student-name';
+        nameDiv.textContent = studentName;
+        resultArea.appendChild(nameDiv);
+
+        const messageContainer = document.createElement('div');
+        messageContainer.className = 'graduation-message';
+        resultArea.appendChild(messageContainer);
+
+        const fullSentence = "selamat anda lulus dari SMAN 1 Pangkalan Lesung";
+        const words = fullSentence.split(' ');
+        let wordIndex = 0;
+        
+        setTimeout(() => {
+          messageContainer.classList.add('show');
+        }, 50);
+
+        function appendNextWord() {
+          if (wordIndex < words.length) {
+            const wordSpan = document.createElement('span');
+            wordSpan.className = 'word-by-word';
+            wordSpan.textContent = words[wordIndex];
+            messageContainer.appendChild(wordSpan);
+            wordIndex++;
+            setTimeout(appendNextWord, 320);
+          } else {
+            setTimeout(() => {
+              startFireworks();
+            }, 500);
+          }
+        }
+
+        appendNextWord();
+      }
+
+      function showError(message) {
+        stopFireworks();
+        resultArea.innerHTML = `<div class="error-message">⚠️ ${message}</div>`;
+      }
+
+      function handleSearch() {
+        const nisnRaw = nisnInput.value.trim();
+        
+        if (nisnRaw === '') {
+          showError('NISN tidak boleh kosong.');
+          return;
+        }
+
+        const studentName = studentData[nisnRaw];
+        
+        if (studentName) {
+          displayGraduationMessage(studentName);
+        } else {
+          showError('NISN tidak ditemukan. Silakan coba lagi.');
+        }
+      }
+
+      searchBtn.addEventListener('click', handleSearch);
+
+      nisnInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          handleSearch();
+        }
+      });
+
+      console.log('✅ Website siap!');
+      console.log('🔍 Masukkan NISN lalu klik Cari atau tekan Enter.');
+      console.log('🎆 Kembang api akan muncul setelah kalimat kelulusan selesai.');
+      
+      window.testFireworks = function() {
+        console.log('Meluncurkan kembang api test...');
+        startFireworks();
+      };
+      
+    })();
+  </script>
+</body>
+</html>
