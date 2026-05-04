@@ -36,6 +36,129 @@
       z-index: 9999;
     }
 
+    /* Emoji besar */
+    .big-emoji-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      z-index: 10000;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .big-emoji-container.show {
+      transform: translate(-50%, -50%) scale(1);
+      animation: emojiBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .big-emoji-container.hide {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      transition: transform 0.4s ease-in, opacity 0.4s ease-in;
+    }
+
+    @keyframes emojiBounce {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.3);
+      }
+      70% {
+        transform: translate(-50%, -50%) scale(0.9);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    @keyframes floatUpDown {
+      0%, 100% {
+        transform: translate(-50%, -50%) translateY(0);
+      }
+      50% {
+        transform: translate(-50%, -50%) translateY(-15px);
+      }
+    }
+
+    .big-emoji-container.floating {
+      animation: floatUpDown 2s ease-in-out infinite;
+    }
+
+    .emoji-row {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .big-emoji {
+      font-size: 6rem;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.3));
+      animation: emojiSpin 0.6s ease-out;
+    }
+
+    @keyframes emojiSpin {
+      0% {
+        transform: rotate(-30deg) scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: rotate(0deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .big-emoji:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .big-emoji:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .congrats-text {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #facc15;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      background: rgba(11, 59, 92, 0.9);
+      padding: 0.6rem 2rem;
+      border-radius: 3rem;
+      letter-spacing: 0.5px;
+      animation: textSlideUp 0.5s ease-out 0.6s both;
+      white-space: nowrap;
+    }
+
+    @keyframes textSlideUp {
+      0% {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .big-emoji {
+        font-size: 4rem;
+      }
+      .congrats-text {
+        font-size: 1.3rem;
+        padding: 0.4rem 1.2rem;
+      }
+      .emoji-row {
+        gap: 1rem;
+      }
+    }
+
     .container {
       max-width: 580px;
       width: 100%;
@@ -335,7 +458,7 @@
       border-radius: 20px;
     }
 
-    /* Foto SK - Ukuran F4 (21cm x 33cm, rasio 11:17) */
+    /* Foto SK - Ukuran F4 */
     .sk-card {
       width: 100%;
       margin-top: 0.8rem;
@@ -414,10 +537,19 @@
   <!-- Canvas untuk kembang api -->
   <canvas id="fireworksCanvas"></canvas>
 
+  <!-- Emoji besar -->
+  <div class="big-emoji-container" id="bigEmojiContainer">
+    <div class="emoji-row">
+      <span class="big-emoji">👍</span>
+      <span class="big-emoji">😊</span>
+      <span class="big-emoji">👍</span>
+    </div>
+    <div class="congrats-text">🎉 SELAMAT! 🎉</div>
+  </div>
+
   <div class="container">
     <!-- 1. Dua Logo bersebelahan -->
     <div class="logo-section">
-      <!-- Logo 1 (Kiri) -->
       <div class="logo-item">
         <img 
           id="logoImage1" 
@@ -426,8 +558,6 @@
           class="logo-image"
         >
       </div>
-
-      <!-- Logo 2 (Kanan) -->
       <div class="logo-item">
         <img 
           id="logoImage2" 
@@ -625,8 +755,9 @@
       const nisnInput = document.getElementById('nisnInput');
       const searchBtn = document.getElementById('searchBtn');
       const resultArea = document.getElementById('resultArea');
+      const bigEmojiContainer = document.getElementById('bigEmojiContainer');
 
-      // ========== KEMBANG API (FIREWORKS) ==========
+      // ========== KEMBANG API ==========
       const canvas = document.getElementById('fireworksCanvas');
       const ctx = canvas.getContext('2d');
       
@@ -634,7 +765,6 @@
       let animationId = null;
       let isFireworksRunning = false;
 
-      // Resize canvas
       function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -642,7 +772,6 @@
       window.addEventListener('resize', resizeCanvas);
       resizeCanvas();
 
-      // Warna-warni kembang api
       const colors = [
         '#FF6B6B', '#FFE66D', '#4ECDC4', '#45B7D1', '#96CEB4',
         '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE',
@@ -650,7 +779,6 @@
         '#FF69B4', '#00BFFF', '#FFA500', '#32CD32', '#FF6347'
       ];
 
-      // Kelas Particle
       class Particle {
         constructor(x, y) {
           this.x = x;
@@ -702,30 +830,22 @@
       function launchMultipleFireworks(count) {
         for (let i = 0; i < count; i++) {
           setTimeout(() => {
-            if (isFireworksRunning) {
-              launchFirework();
-            }
+            if (isFireworksRunning) launchFirework();
           }, i * 200);
         }
       }
 
       function animate() {
         if (!isFireworksRunning) return;
-        
         animationId = requestAnimationFrame(animate);
-        
         ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
         particles = particles.filter(p => p.alpha > 0);
         particles.forEach(p => {
           p.update();
           p.draw(ctx);
         });
-        
-        if (particles.length === 0 && !isFireworksRunning) {
-          stopFireworks();
-        }
+        if (particles.length === 0 && !isFireworksRunning) stopFireworks();
       }
 
       function startFireworks() {
@@ -746,9 +866,15 @@
         
         animate();
         
+        // Setelah 5 detik, tampilkan emoji besar
+        setTimeout(() => {
+          showBigEmoji();
+        }, 5000);
+        
+        // Hentikan kembang api setelah 7 detik
         setTimeout(() => {
           stopFireworks();
-        }, 6000);
+        }, 7000);
       }
 
       function stopFireworks() {
@@ -765,9 +891,37 @@
         }, 500);
       }
 
+      // ========== FUNGSI EMOJI BESAR ==========
+      function showBigEmoji() {
+        // Reset animasi
+        bigEmojiContainer.classList.remove('hide', 'floating');
+        bigEmojiContainer.classList.add('show');
+        
+        // Setelah animasi bounce selesai, tambahkan floating
+        setTimeout(() => {
+          bigEmojiContainer.classList.add('floating');
+        }, 700);
+        
+        // Sembunyikan setelah 5 detik
+        setTimeout(() => {
+          hideBigEmoji();
+        }, 5000);
+      }
+
+      function hideBigEmoji() {
+        bigEmojiContainer.classList.remove('show', 'floating');
+        bigEmojiContainer.classList.add('hide');
+        
+        // Bersihkan setelah transisi selesai
+        setTimeout(() => {
+          bigEmojiContainer.classList.remove('hide');
+        }, 500);
+      }
+
       // ========== FUNGSI PENCARIAN NISN ==========
       function displayGraduationMessage(studentName) {
         stopFireworks();
+        hideBigEmoji();
         
         resultArea.innerHTML = '';
         
@@ -797,6 +951,7 @@
             wordIndex++;
             setTimeout(appendNextWord, 320);
           } else {
+            // Setelah semua kata muncul, luncurkan kembang api
             setTimeout(() => {
               startFireworks();
             }, 500);
@@ -808,6 +963,7 @@
 
       function showError(message) {
         stopFireworks();
+        hideBigEmoji();
         resultArea.innerHTML = `<div class="error-message">⚠️ ${message}</div>`;
       }
 
@@ -839,11 +995,10 @@
 
       console.log('✅ Website siap!');
       console.log('🔍 Masukkan NISN lalu klik Cari atau tekan Enter.');
-      console.log('📄 Gambar SK menggunakan ukuran proporsi F4 (21cm x 33cm).');
-      console.log('🎆 Kembang api akan muncul setelah kalimat kelulusan selesai.');
+      console.log('🎆 Kembang api + emoji besar akan muncul setelah lulus!');
       
       window.testFireworks = function() {
-        console.log('Meluncurkan kembang api test...');
+        console.log('Test kembang api + emoji...');
         startFireworks();
       };
       
