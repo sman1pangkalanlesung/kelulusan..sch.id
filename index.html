@@ -335,27 +335,37 @@
       border-radius: 20px;
     }
 
-    /* Foto SK */
+    /* Foto SK - Ukuran F4 (21cm x 33cm, rasio 11:17) */
     .sk-card {
       width: 100%;
       margin-top: 0.8rem;
       background: #ffffff;
-      border-radius: 1.8rem;
+      border-radius: 1.2rem;
       overflow: hidden;
       box-shadow: 0 14px 24px rgba(0,0,0,0.12);
       border: 1px solid #cdddec;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sk-image-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      background: #f5f7fa;
+      padding: 0.8rem;
     }
 
     .sk-image {
-      width: 100%;
-      height: auto;
+      width: 85%;
+      max-width: 380px;
+      aspect-ratio: 11 / 17;
+      object-fit: contain;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 0.3rem;
       display: block;
-      object-fit: cover;
-      background: #eef3f9;
-      aspect-ratio: 16 / 11;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" fill="%23dee7f2"><rect width="400" height="280" fill="%23eaf0f6"/><text x="200" y="150" font-size="20" font-weight="bold" text-anchor="middle" fill="%2332567b">SK KELULUSAN</text><text x="200" y="180" font-size="14" text-anchor="middle" fill="%23405c7a">SMAN 1 Pangkalan Lesung</text></svg>');
-      background-size: cover;
-      background-position: center;
     }
 
     .sk-caption {
@@ -366,6 +376,7 @@
       text-align: center;
       font-weight: 500;
       border-top: 1px solid #dce5f0;
+      width: 100%;
     }
 
     @media (max-width: 480px) {
@@ -391,6 +402,10 @@
       }
       .announcement-title .subtitle {
         font-size: 0.7rem;
+      }
+      .sk-image {
+        width: 90%;
+        max-width: 320px;
       }
     }
   </style>
@@ -448,7 +463,7 @@
 
     <!-- 5. Kotak Pencarian NISN -->
     <div class="search-box">
-      <input type="text" id="nisnInput" placeholder="Masukkan NISN " inputmode="numeric" autocomplete="off">
+      <input type="text" id="nisnInput" placeholder="Masukkan NISN" inputmode="numeric" autocomplete="off">
       <button id="searchBtn">🔍 Cari</button>
     </div>
 
@@ -457,9 +472,16 @@
       <span style="color:#5b6f87; font-size:0.9rem;">✨ Ketik NISN lalu tekan cari</span>
     </div>
 
-    <!-- 6. Foto SK Kelulusan -->
+    <!-- 6. Foto SK Kelulusan - Ukuran F4 -->
     <div class="sk-card">
-      <div class="sk-image" aria-label="Scan SK Kelulusan"></div>
+      <div class="sk-image-wrapper">
+        <img 
+          id="skImage" 
+          src="SK 2026.jpg"
+          alt="SK Kelulusan"
+          class="sk-image"
+        >
+      </div>
       <div class="sk-caption">📄 Surat Keputusan Kelulusan · 2026</div>
     </div>
   </div>
@@ -817,6 +839,7 @@
 
       console.log('✅ Website siap!');
       console.log('🔍 Masukkan NISN lalu klik Cari atau tekan Enter.');
+      console.log('📄 Gambar SK menggunakan ukuran proporsi F4 (21cm x 33cm).');
       console.log('🎆 Kembang api akan muncul setelah kalimat kelulusan selesai.');
       
       window.testFireworks = function() {
